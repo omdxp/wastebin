@@ -23,9 +23,13 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>This is the code display page.</h1>
-    <pre>
-        <code><%= code %> </code>
-    </pre>
+    <div class="wrapper">
+      <div class="line-numbers">
+        <% for (let i = 1; lineNumbers; i++) { %>
+        <div><%= i %></div>
+        <% } %>
+      </div>
+      <pre><code id="code-display" class="language-plaintext"><%= code %> </code></pre>
+    </div>
   </body>
 </html>

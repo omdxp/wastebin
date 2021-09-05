@@ -9,6 +9,7 @@ Use the commands in the top right corner
 to create a new file to share with others.`;
   res.render("code-display", {
     code,
+    lineNumbers: code.split("\n").length,
   });
 });
 
