@@ -18,6 +18,7 @@ Use the commands in the top right corner
 to create a new file to share with others.`;
   res.render("code-display", {
     code,
+    language: "plaintext",
   });
 });
 
@@ -37,12 +38,25 @@ app.post("/save", async (req, res) => {
   }
 });
 
+app.get("/:id/duplicate", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const doc = await Document.findById(id);
+    res.render("new", {
+      code: doc.value,
+    });
+  } catch (e) {
+    res.redirect(`/${id}`);
+  }
+});
+
 app.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const doc = await Document.findById(id);
     res.render("code-display", {
       code: doc.value,
+      id,
     });
   } catch (e) {
     res.redirect("/");
