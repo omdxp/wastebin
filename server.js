@@ -4,6 +4,13 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+const Document = require("./models/Document");
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/wastebin", {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
+
 app.get("/", (req, res) => {
   const code = `Welcome to wasteBin!
     
@@ -18,9 +25,28 @@ app.get("/new", (req, res) => {
   res.render("new");
 });
 
-app.post("/save", (req, res) => {
+app.post("/save", async (req, res) => {
   const value = req.body.value;
-  console.log(value);
+  try {
+    const doc = await Document.create({
+      value,
+    });
+    res.redirect(`/${doc.id}`);
+  } catch (e) {
+    res.render("new", { value });
+  }
+});
+
+app.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const doc = await Document.findById(id);
+    res.render("code-display", {
+      code: doc.value,
+    });
+  } catch (e) {
+    res.redirect("/");
+  }
 });
 
 app.listen(3000);
